@@ -1,0 +1,515 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-11-26 14:30-0800\n"
+"PO-Revision-Date: 2021-09-29 19:02+0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: uk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.0\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
+
+#. A short description of what Minigalaxy is
+#: data/ui/about.ui:10
+msgctxt "short_description"
+msgid "A simple GOG client for Linux"
+msgstr "Простий клієнт GOG для Linux"
+
+#: minigalaxy/ui/about.py:13
+msgid "About"
+msgstr "Інформація"
+
+#. Opens about dialog
+#: data/ui/application.ui:58
+msgctxt "about"
+msgid "About"
+msgstr "Інформація"
+
+#: data/ui/properties.ui:129
+msgid "Added at the end of the command used to launch the game"
+msgstr "Додано в кінці команди, яка використовується для запуску гри"
+
+#: data/ui/properties.ui:141
+msgid "Added in front of the command used to launch the game"
+msgstr "Додано перед командою, яка використовується для запуску гри"
+
+#: minigalaxy/ui/gametile.py:132
+msgid "Are you sure you want to cancel downloading {}?"
+msgstr "Ви впевнені, що хочете скасувати завантаження {}?"
+
+#: minigalaxy/ui/window.py:100
+msgid "Are you sure you want to log out of GOG?"
+msgstr "Ви дійсно хочете вийти з GOG?"
+
+#: minigalaxy/ui/gametile.py:145
+#, python-format
+msgid "Are you sure you want to uninstall %s?"
+msgstr "Ви впевнені, що хочете видалити %s?"
+
+#: minigalaxy/constants.py:7 minigalaxy/constants.py:30
+msgid "Brazilian Portuguese"
+msgstr "Бразильський Португальська"
+
+#: data/ui/properties.ui:266
+msgid "Cancel"
+msgstr "Скасувати"
+
+#: data/ui/preferences.ui:20
+msgctxt "cancel"
+msgid "Cancel"
+msgstr "Скасувати"
+
+#: minigalaxy/constants.py:8
+msgid "Chinese"
+msgstr "Китайська"
+
+#: data/ui/properties.ui:180
+msgid "Command flags:"
+msgstr "Флажки для команди:"
+
+#: minigalaxy/ui/properties.py:103
+msgid "Couldn't open store page"
+msgstr "Не вдалося відкрити сторінку магазину"
+
+#: minigalaxy/ui/properties.py:93
+msgid "Couldn't open support page"
+msgstr "Не вдалося відкрити сторінку підтримки"
+
+#. Has to end with ": "
+#: data/ui/preferences.ui:288
+msgctxt "create_menu_shortcuts"
+msgid "Create menu shortcuts: "
+msgstr "Створити ярлики меню: "
+
+#: minigalaxy/constants.py:31
+msgid "Czech"
+msgstr ""
+
+#: data/ui/gametile.ui:178
+msgid "DLC"
+msgstr "DLC"
+
+#: minigalaxy/constants.py:9
+msgid "Danish"
+msgstr "Датська"
+
+#: minigalaxy/ui/gametile.py:207 minigalaxy/ui/gametile.py:237
+msgid "Download error"
+msgstr "Помилка при завантаженні"
+
+#: minigalaxy/constants.py:10 minigalaxy/constants.py:32
+msgid "Dutch"
+msgstr "Голландська"
+
+#: minigalaxy/constants.py:11 minigalaxy/constants.py:33
+msgid "English"
+msgstr "Англійська"
+
+#: minigalaxy/ui/preferences.py:102
+msgid ""
+"Failed to change program language. Make sure locale is generated on your "
+"system."
+msgstr ""
+
+#: minigalaxy/ui/gametile.py:301
+msgid "Failed to install {}"
+msgstr "Не вдалося встановити {}"
+
+#: minigalaxy/ui/library.py:141
+msgid "Failed to retrieve library"
+msgstr "Не вдалося отримати бібліотеку"
+
+#: minigalaxy/launcher.py:34 minigalaxy/ui/gametile.py:122
+msgid "Failed to start {}:"
+msgstr "Не вдалося запустити {}:"
+
+#: minigalaxy/constants.py:12 minigalaxy/constants.py:34
+msgid "Finnish"
+msgstr "Фінська"
+
+#: minigalaxy/constants.py:13 minigalaxy/constants.py:35
+msgid "French"
+msgstr "Французька"
+
+#: minigalaxy/ui/properties.py:140
+msgid "Genre"
+msgstr "Жанр"
+
+#: minigalaxy/constants.py:14 minigalaxy/constants.py:36
+msgid "German"
+msgstr "Німецька"
+
+#. A link to the GitHub page
+#: data/ui/about.ui:12
+msgctxt "github_page_link"
+msgid "GitHub page"
+msgstr "Сторінка GitHub"
+
+#: data/ui/properties.ui:105
+msgid "Hide game:"
+msgstr "Сховати гру:"
+
+#: minigalaxy/constants.py:15
+msgid "Hungarian"
+msgstr "Угорська"
+
+#: minigalaxy/installer.py:147
+msgid "Innoextract extraction failed."
+msgstr "Помилка вилучення Innoextract."
+
+#: minigalaxy/installer.py:158
+msgid "Innoextract not installed."
+msgstr "Innoextract не встановлено."
+
+#. The place directory in which games are installed. Ends with ": ".
+#: data/ui/preferences.ui:118
+msgctxt "install_path"
+msgid "Installation path: "
+msgstr "Шлях установки: "
+
+#. Used next to a checkbox which switches between showing all games and only installed ones
+#: data/ui/application.ui:116
+msgctxt "installed"
+msgid "Installed"
+msgstr "Встановлено"
+
+#: minigalaxy/constants.py:16 minigalaxy/constants.py:37
+msgid "Italian"
+msgstr "Італійська"
+
+#: minigalaxy/constants.py:17
+msgid "Japanese"
+msgstr "Японська"
+
+#: minigalaxy/ui/preferences.py:46
+msgid ""
+"Keep installers after downloading a game.\n"
+"Installers are stored in: {}"
+msgstr ""
+"Зберегти інсталятори після завантаження гри.\n"
+"Інсталятори зберігаються в: {}"
+
+#. Whether installer files are kept after download. Ends with ": ".
+#: data/ui/preferences.ui:145
+msgctxt "keep_installer"
+msgid "Keep installers: "
+msgstr "Зберігати інсталятори: "
+
+#: minigalaxy/constants.py:18
+msgid "Korean"
+msgstr "Корейська"
+
+#. The preferred language on Minigalaxy start. Ends with ": ".
+#: data/ui/preferences.ui:68
+msgctxt "language"
+msgid "Language: "
+msgstr "Мова: "
+
+#: minigalaxy/ui/login.py:20
+msgid "Login"
+msgstr "Увійти"
+
+#. Logs the users gog account out and returns to login page
+#: data/ui/application.ui:17
+msgctxt "logout"
+msgid "Logout"
+msgstr "Вийти"
+
+#: minigalaxy/launcher.py:179
+msgid "No executable was found in {}"
+msgstr "У {} не знайдено жодного виконуваного файлу"
+
+#: minigalaxy/constants.py:19
+msgid "Norwegian"
+msgstr "Норвезька"
+
+#: minigalaxy/constants.py:38
+msgid "Norwegian Bokmål"
+msgstr "Норвезька Букмол"
+
+#: minigalaxy/constants.py:39
+msgid "Norwegian Nynorsk"
+msgstr "Норвезька Ньорск"
+
+#: minigalaxy/installer.py:97
+msgid "Not enough space to extract game. Required: {} Available: {}"
+msgstr "Не вистачає місця для розпакування гри. Потрібно: {} Доступно: {}"
+
+#: data/ui/properties.ui:280
+msgid "OK"
+msgstr "ОК"
+
+#: data/ui/properties.ui:216
+msgid "Open files"
+msgstr "Відкрийте файли"
+
+#: minigalaxy/ui/properties.py:94 minigalaxy/ui/properties.py:104
+msgid "Please check your internet connection"
+msgstr "Перевірте підключення до Інтернету"
+
+#: minigalaxy/constants.py:20 minigalaxy/constants.py:40
+msgid "Polish"
+msgstr "Польська"
+
+#: minigalaxy/constants.py:21
+msgid "Portuguese"
+msgstr "Португальська"
+
+#: minigalaxy/ui/preferences.py:30
+msgid "Preferences"
+msgstr "Налаштування"
+
+#. Opens preferences dialog
+#: data/ui/application.ui:32
+msgctxt "preferences"
+msgid "Preferences"
+msgstr "Налаштування"
+
+#. Preferred language for downloading games in. Ends with ": ".
+#: data/ui/preferences.ui:93
+msgctxt "preferred_game_language"
+msgid "Preferred game language: "
+msgstr "Бажана мова: "
+
+#: data/ui/gametile.ui:223
+msgid "Properties"
+msgstr "Властивості"
+
+#: minigalaxy/ui/properties.py:33
+msgid "Properties of {}"
+msgstr "Властивості {}"
+
+#. Tooltip for refresh button
+#: data/ui/application.ui:89
+msgctxt "refresh"
+msgid "Refresh game list"
+msgstr "Оновити список ігор"
+
+#: data/ui/properties.ui:203
+msgid "Regedit"
+msgstr "Regedit (регіт)"
+
+#: minigalaxy/constants.py:22 minigalaxy/constants.py:41
+msgid "Russian"
+msgstr "Російська"
+
+#. Saves the preferences
+#: data/ui/preferences.ui:34
+msgctxt "save"
+msgid "Save"
+msgstr "Зберегти"
+
+#: data/ui/properties.ui:154
+msgid "Show FPS in game:"
+msgstr "Показати FPS у грі:"
+
+#. Has to end with ": "
+#: data/ui/preferences.ui:250
+msgctxt "show_windows_games"
+msgid "Show Windows games: "
+msgstr "Показати ігри для Windows: "
+
+#. Has to end with ": "
+#: data/ui/preferences.ui:224
+msgctxt "show_hidden_games"
+msgid "Show hidden games: "
+msgstr "Показати приховані ігри: "
+
+#. Tooltip for the switch which allows only showing installed games or all games
+#: data/ui/application.ui:105
+msgctxt "tooltip_installed"
+msgid "Show only installed games"
+msgstr "Показати лише встановлені ігри"
+
+#: minigalaxy/constants.py:42
+msgid "Simplified Chinese"
+msgstr "Спрощена Китайська"
+
+#: minigalaxy/constants.py:23 minigalaxy/constants.py:43
+msgid "Spanish"
+msgstr "Іспанська"
+
+#. Whether the user will stay logged in after closing Minigalaxy. Ends with ": ".
+#: data/ui/preferences.ui:171
+msgctxt "stay_logged_in"
+msgid "Stay logged in:"
+msgstr "Залишатися в системі:"
+
+#: data/ui/properties.ui:77
+msgid "Store"
+msgstr "Магазин"
+
+#: data/ui/properties.ui:63
+msgid "Support"
+msgstr "Підтримка"
+
+#: minigalaxy/constants.py:24 minigalaxy/constants.py:44
+msgid "Swedish"
+msgstr "Шведська"
+
+#: minigalaxy/constants.py:29
+msgid "System default"
+msgstr "За замовчуванням"
+
+#: minigalaxy/installer.py:128
+msgid "The installation of {} failed. Please try again."
+msgstr "Не вдалося встановити {}. Спробуйте ще раз."
+
+#: data/ui/preferences.ui:90
+msgctxt "preferred_game_language_tooltip"
+msgid "The preferred language for downloading games in"
+msgstr "Бажана мова для завантаження ігор в"
+
+#: data/ui/preferences.ui:65
+msgctxt "language_tooltip"
+msgid "The preferred language on Minigalaxy start"
+msgstr "Бажана мова для запуску Minigalaxy"
+
+#: minigalaxy/ui/gametile.py:208
+msgid ""
+"There was an error when trying to fetch the download link!\n"
+"{}"
+msgstr ""
+"Під час спроби отримати посилання для завантаження сталася помилка!\n"
+"{}"
+
+#: data/ui/preferences.ui:115
+msgctxt "install_path_tooltip"
+msgid "This is where games will be installed"
+msgstr "Тут будуть встановлені ігри"
+
+#: minigalaxy/constants.py:45
+msgid "Traditional Chinese"
+msgstr "Традиційна Китайська"
+
+#: minigalaxy/constants.py:25 minigalaxy/constants.py:46
+msgid "Turkish"
+msgstr "Турецька"
+
+#: minigalaxy/constants.py:47
+msgid "Ukrainian"
+msgstr ""
+
+#: data/ui/gametile.ui:208
+msgid "Uninstall"
+msgstr "Видалити"
+
+#: data/ui/gametile.ui:193
+msgid "Update"
+msgstr "Оновити"
+
+#. Has to end with ": "
+#: data/ui/preferences.ui:198
+msgctxt "use_dark_theme"
+msgid "Use dark theme: "
+msgstr "Використовувати темну тему: "
+
+#: data/ui/properties.ui:167
+msgid "Variable flags:"
+msgstr "Флажки для змінної:"
+
+#: minigalaxy/ui/properties.py:142
+msgid "Version"
+msgstr "Версія"
+
+#: data/ui/preferences.ui:168
+msgctxt "stay_logged_in_tooltip"
+msgid "When disabled you'll be asked to log in each time Minigalaxy is started"
+msgstr ""
+"Коли вимкнено, вам буде запропоновано входити в систему кожного разу при "
+"запуску Minigalaxy"
+
+#: data/ui/preferences.ui:195
+msgctxt "use_dark_theme_tooltip"
+msgid "Whether Minigalaxy should use dark theme or not"
+msgstr "Використовувати темну тему для Minigalaxy чи ні"
+
+#: data/ui/preferences.ui:247
+msgctxt "show_windows_games_tooltip"
+msgid "Whether Windows games are shown in the library or not"
+msgstr "Відображати ігри Windows у бібліотеці чи ні"
+
+#: data/ui/preferences.ui:221
+msgctxt "show_hidden_games_tooltip"
+msgid "Whether hidden games are shown in the library or not"
+msgstr "Показувати приховані ігри в бібліотеці чи ні"
+
+#: data/ui/preferences.ui:285
+msgctxt "create_menu_shortcuts_tooltip"
+msgid "Whether shortcuts are created for newly installed games or not"
+msgstr ""
+"Незалежно від того, створені ярлики для нещодавно встановлених ігор чи ні"
+
+#: minigalaxy/installer.py:172
+msgid "Wine extraction failed."
+msgstr "Помилка вилучення Wine."
+
+#: minigalaxy/ui/preferences.py:162
+msgid "Wine wasn't found. Showing Windows games cannot be enabled."
+msgstr "Wine не знайдено. Показ ігор Windows не може бути ввімкнено."
+
+#: data/ui/properties.ui:190
+msgid "Winecfg"
+msgstr "Winecfg"
+
+#: minigalaxy/ui/gametile.py:460
+msgid "download"
+msgstr "завантажити"
+
+#: minigalaxy/ui/gametile.py:500
+msgid "downloading…"
+msgstr "завантаження…"
+
+#: minigalaxy/ui/gametile.py:491
+msgid "in queue…"
+msgstr "в черзі…"
+
+#: minigalaxy/ui/gametile.py:479
+msgid "install"
+msgstr "встановити"
+
+#: minigalaxy/ui/gametile.py:511
+msgid "installing…"
+msgstr "встановлення…"
+
+#: minigalaxy/ui/gametile.py:526 minigalaxy/ui/gametile.py:556
+msgid "play"
+msgstr "грати"
+
+#: minigalaxy/ui/gametile.py:542
+msgid "uninstalling…"
+msgstr "видалення…"
+
+#: minigalaxy/ui/properties.py:136
+msgid "unknown"
+msgstr ""
+
+#: minigalaxy/ui/gametile.py:565
+msgid "updating…"
+msgstr "оновлення…"
+
+#: minigalaxy/installer.py:130
+msgid "{} could not be unzipped."
+msgstr "{} не вдалося розпакувати."
+
+#: minigalaxy/installer.py:73
+msgid "{} failed to download."
+msgstr "Не вдалося завантажити {}."
+
+#: minigalaxy/ui/preferences.py:174
+msgid "{} isn't a usable path"
+msgstr "{} некоректний шлях"
+
+#: minigalaxy/installer.py:85
+msgid "{} was corrupted. Please download it again."
+msgstr "{} пошкоджено. Завантажте ще раз."

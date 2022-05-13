@@ -1,10 +1,7 @@
 import subprocess
-import sys
 from unittest import TestCase, mock
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, mock_open
 
-m_config = MagicMock()
-sys.modules['minigalaxy.config'] = m_config
 from minigalaxy import launcher
 from minigalaxy.game import Game
 
@@ -53,6 +50,64 @@ class Test(TestCase):
         obs = launcher.get_windows_exe_cmd(game, files)
         self.assertEqual(exp, obs)
 
+    @mock.patch('builtins.open', new_callable=mock_open, read_data="")
+    @mock.patch('os.chdir')
+    def test2_get_windows_exe_cmd(self, mock_os_chdir, mo):
+        goggame_1414471894_info_content = """{
+        "buildId": "53350324452482937",
+        "clientId": "53185732904249211",
+        "gameId": "1414471894",
+        "language": "Russian",
+        "languages": [
+        "ru-RU"
+        ],
+        "name": "Metro Exodus - Sam's Story",
+        "osBitness": [
+        "64"
+        ],
+        "playTasks": [],
+        "rootGameId": "1407287452",
+        "version": 1
+        }"""
+        goggame_1407287452_info_content = """{
+        "buildId": "53350324452482937",
+        "clientId": "53185732904249211",
+        "gameId": "1407287452",
+        "language": "Russian",
+        "languages": [
+        "ru-RU"
+        ],
+        "name": "Metro Exodus",
+        "osBitness": [
+        "64"
+        ],
+        "playTasks": [
+        {
+        "category": "game",
+        "isPrimary": true,
+        "languages": [
+        "ru-RU"
+        ],
+        "name": "Metro Exodus",
+        "osBitness": [
+        "64"
+        ],
+        "path": "MetroExodus.exe",
+        "type": "FileTask"
+        }
+        ],
+        "rootGameId": "1407287452",
+        "version": 1
+        }"""
+        handlers = (mock_open(read_data=goggame_1414471894_info_content).return_value, mock_open(read_data=goggame_1407287452_info_content).return_value)
+        mo.side_effect = handlers
+        files = ['thumbnail.jpg', 'docs', 'support', 'game', 'minigalaxy-dlc.json', 'MetroExodus.exe', 'unins000.exe',
+                 'goggame-1407287452.info', 'goggame-1414471894.info']
+        game = Game("Test Game", install_dir="/test/install/dir")
+        exp = ["wine", "MetroExodus.exe"]
+        obs = launcher.get_windows_exe_cmd(game, files)
+        self.assertEqual(exp, obs)
+
     def test_get_dosbox_exe_cmd(self):
         files = ['thumbnail.jpg', 'docs', 'support', 'dosbox_bbb_single.conf', 'dosbox_aaa.conf', 'dosbox']
         game = Game("Test Game", install_dir="/test/install/dir")
@@ -68,10 +123,8 @@ class Test(TestCase):
         self.assertEqual(exp, obs)
 
     def test_get_start_script_exe_cmd(self):
-        files = ['thumbnail.jpg', 'docs', 'support', 'game', 'start.sh', 'minigalaxy-dlc.json', 'gameinfo']
-        game = Game("Test Game", install_dir="/test/install/dir")
-        exp = ["/test/install/dir/start.sh"]
-        obs = launcher.get_start_script_exe_cmd(game, files)
+        exp = ["./start.sh"]
+        obs = launcher.get_start_script_exe_cmd()
         self.assertEqual(exp, obs)
 
     @mock.patch('os.getcwd')
@@ -109,9 +162,9 @@ class Test(TestCase):
     @mock.patch('minigalaxy.launcher.check_if_game_start_process_spawned_final_process')
     def test2_check_if_game_started_correctly(self, mock_check_game):
         mock_process = MagicMock()
-        mock_process.communicate.return_value = (b"Output message", b"Error message")
+        mock_process.communicate.return_value = (b"Output message", None)
         game = Game("Test Game", install_dir="/test/install/dir")
-        exp = "Error message"
+        exp = "Output message"
         obs = launcher.check_if_game_started_correctly(mock_process, game)
         self.assertEqual(exp, obs)
 
@@ -150,6 +203,22 @@ makson    1006     2  0 lis24 ?        00:00:00 /bin/sh /home/makson/.paradoxlau
         obs = launcher.check_if_game_start_process_spawned_final_process(err_msg, game)
         self.assertEqual(exp, obs)
 
-
-del sys.modules["minigalaxy.config"]
-del sys.modules["minigalaxy.game"]
+    @mock.patch('os.getpid')
+    @mock.patch('subprocess.check_output')
+    def test3_check_if_game_start_process_spawned_final_process(self, mock_check_output, mock_getpid):
+        mock_check_output.return_value = b"""UID        PID  PPID  C STIME TTY          TIME CMD
+root     12486     2  0 17:47 ?        00:00:00 [kworker/u17:3-kcryptd]
+root     12543     2  0 17:53 ?        00:00:00 [kworker/u17:1-kcryptd]
+root     12617     2  0 18:02 ?        00:00:00 [kworker/5:1-ata_sff]
+root     12652     2  0 18:07 ?        00:00:00 [kworker/0:0-events]
+root     12682     2  0 18:08 ?        00:00:00 [kworker/5:2-ata_sff]
+root     12699     2  0 18:08 ?        00:00:00 [kworker/u17:0-kcryptd]
+makson   12783  6690  1 18:09 pts/4    00:00:01 /usr/bin/python3 build/scripts-3.7/minigalaxy
+makson   12866  1378  0 18:09 pts/4    00:00:00 /bin/sh /home/makson/.paradoxlauncher/launcher-v2.2021.1/Paradox Launcher --pdxlGameDir /home/makson/GOG Games/Imperator Rome/game/launcher --gameDir /home/makson/GOG Games/Imperator Rome/game/launcher
+"""
+        mock_getpid.return_value = 1000
+        err_msg = "Error Message"
+        game = Game("Imperator: Rome", install_dir="/home/makson/GOG Games")
+        exp = ""
+        obs = launcher.check_if_game_start_process_spawned_final_process(err_msg, game)
+        self.assertEqual(exp, obs)

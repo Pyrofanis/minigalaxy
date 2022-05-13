@@ -1,17 +1,15 @@
-import copy
 import os
 import re
 import json
-import gi
 import threading
 from typing import List
-gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, GLib
 from minigalaxy.paths import UI_DIR
 from minigalaxy.api import Api
 from minigalaxy.config import Config
 from minigalaxy.game import Game
 from minigalaxy.ui.gametile import GameTile
+from minigalaxy.ui.gametilelist import GameTileList
+from minigalaxy.ui.gtk import Gtk, GLib
 from minigalaxy.translation import _
 
 
@@ -25,7 +23,7 @@ class Library(Gtk.Viewport):
         Gtk.Viewport.__init__(self)
         self.parent = parent
         self.api = api
-        self.show_installed_only = False
+        self.show_installed_only = Config.get("installed_filter")
         self.search_string = ""
         self.offline = False
         self.games = []
@@ -76,6 +74,9 @@ class Library(Gtk.Viewport):
             if tile.current_state in [tile.state.DOWNLOADABLE, tile.state.INSTALLABLE]:
                 return False
 
+        if not Config.get("show_hidden_games") and tile.game.get_info("hide_game"):
+            return False
+
         return True
 
     def sort_library(self):
@@ -98,7 +99,11 @@ class Library(Gtk.Viewport):
                 self.__add_gametile(game)
 
     def __add_gametile(self, game):
-        self.flowbox.add(GameTile(self, game))
+        view = Config.get("view")
+        if view == "grid":
+            self.flowbox.add(GameTile(self, game))
+        elif view == "list":
+            self.flowbox.add(GameTileList(self, game))
         self.sort_library()
         self.flowbox.show_all()
 
@@ -119,9 +124,9 @@ class Library(Gtk.Viewport):
             if os.path.isfile(gameinfo):
                 with open(gameinfo, 'r') as file:
                     name = file.readline().strip()
-                    version = file.readline().strip()
-                    version_dev = file.readline().strip()
-                    language = file.readline().strip()
+                    version = file.readline().strip()      # noqa: F841
+                    version_dev = file.readline().strip()  # noqa: F841
+                    language = file.readline().strip()     # noqa: F841
                     game_id = file.readline().strip()
                     if not game_id:
                         game_id = 0
@@ -129,32 +134,38 @@ class Library(Gtk.Viewport):
                         game_id = int(game_id)
                 games.append(Game(name=name, game_id=game_id, install_dir=full_path))
             else:
-                game_files = os.listdir(full_path)
-                for file in game_files:
-                    if re.match(r'^goggame-[0-9]*\.info$', file):
-                        with open(os.path.join(full_path, file), 'r') as info_file:
-                            info = json.loads(info_file.read())
-                            game = Game(
-                                name=info["name"],
-                                game_id=int(info["gameId"]),
-                                install_dir=full_path,
-                                platform="windows"
-                            )
-                            games.append(game)
+                games.extend(get_installed_windows_games(full_path))
         return games
 
     def __add_games_from_api(self):
-        retrieved_games = self.api.get_library()
-        if retrieved_games:
+        retrieved_games, err_msg = self.api.get_library()
+        if not err_msg:
             self.offline = False
         else:
-            retrieved_games = []
             self.offline = True
-            GLib.idle_add(self.parent.show_error, _("Failed to retrieve library"), _("Couldn't connect to GOG servers"))
+            GLib.idle_add(self.parent.show_error, _("Failed to retrieve library"), _(err_msg))
         for game in retrieved_games:
             if game not in self.games:
                 self.games.append(game)
-            elif self.games[self.games.index(game)].id == 0:
+            elif self.games[self.games.index(game)].id == 0 or self.games[self.games.index(game)].name != game.name:
                 self.games[self.games.index(game)].id = game.id
+                self.games[self.games.index(game)].name = game.name
             self.games[self.games.index(game)].image_url = game.image_url
             self.games[self.games.index(game)].url = game.url
+
+
+def get_installed_windows_games(full_path):
+    games = []
+    game_files = os.listdir(full_path)
+    for file in game_files:
+        if re.match(r'^goggame-[0-9]*\.info$', file):
+            with open(os.path.join(full_path, file), 'rb') as info_file:
+                info = json.loads(info_file.read().decode('utf-8-sig'))
+                game = Game(
+                    name=info["name"],
+                    game_id=int(info["gameId"]),
+                    install_dir=full_path,
+                    platform="windows"
+                )
+                games.append(game)
+    return games

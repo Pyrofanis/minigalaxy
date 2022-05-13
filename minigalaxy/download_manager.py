@@ -3,6 +3,7 @@ import shutil
 import time
 import threading
 import queue
+
 from requests.exceptions import ConnectionError
 from minigalaxy.config import Config
 from minigalaxy.constants import DOWNLOAD_CHUNK_SIZE, MINIMUM_RESUME_SIZE, SESSION
@@ -47,6 +48,8 @@ class __DownloadManger:
                 while not self.__queue.empty():
                     queued_download = self.__queue.get()
                     if download == queued_download:
+                        download.cancel()
+                    elif download.game == queued_download.game:
                         download.cancel()
                     else:
                         new_queue.put(queued_download)
@@ -145,6 +148,8 @@ class __DownloadManger:
                         progress = int(downloaded_size / file_size * 100)
                         download.set_progress(progress)
                 save_file.close()
+        else:
+            download.set_progress(100)
         return result
 
     def __is_same_download_as_before(self, download):
@@ -155,7 +160,7 @@ class __DownloadManger:
 
         # Check if the first part of the file
         download_request = SESSION.get(download.url, stream=True)
-        size_to_check = DOWNLOAD_CHUNK_SIZE*5
+        size_to_check = DOWNLOAD_CHUNK_SIZE * 5
         for chunk in download_request.iter_content(chunk_size=size_to_check):
             with open(download.save_location, "rb") as file:
                 file_content = file.read(size_to_check)

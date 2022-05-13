@@ -2,8 +2,23 @@ import os
 import threading
 import json
 import time
-from minigalaxy.paths import CONFIG_DIR, CONFIG_FILE_PATH
-from minigalaxy.constants import DEFAULT_CONFIGURATION
+from minigalaxy.paths import CONFIG_DIR, CONFIG_FILE_PATH, DEFAULT_INSTALL_DIR
+
+# The default values for new configuration files
+DEFAULT_CONFIGURATION = {
+    "locale": "",
+    "lang": "en",
+    "view": "grid",
+    "install_dir": DEFAULT_INSTALL_DIR,
+    "keep_installers": False,
+    "stay_logged_in": True,
+    "use_dark_theme": False,
+    "show_hidden_games": False,
+    "show_windows_games": False,
+    "keep_window_maximized": False,
+    "installed_filter": False,
+    "create_applications_file": False
+}
 
 
 # Make sure you never spawn two instances of this class
@@ -11,15 +26,20 @@ from minigalaxy.constants import DEFAULT_CONFIGURATION
 # The config file is only read once upon starting up
 class __Config:
     def __init__(self):
+        self.first_run = False
+        self.__config = {}
         self.__config_file = CONFIG_FILE_PATH
-        self.__config = self.__load_config_file()
-        self.__add_missing_config_entries()
         self.__update_required = False
 
-        # Update the config file regularly to reflect the self.__config dictionary
-        keep_config_synced_thread = threading.Thread(target=self.__keep_config_synced)
-        keep_config_synced_thread.daemon = True
-        keep_config_synced_thread.start()
+    def first_run_init(self):
+        if not self.first_run:
+            self.first_run = True
+            self.__config = self.__load_config_file()
+            self.__add_missing_config_entries()
+            # Update the config file regularly to reflect the self.__config dictionary
+            keep_config_synced_thread = threading.Thread(target=self.__keep_config_synced)
+            keep_config_synced_thread.daemon = True
+            keep_config_synced_thread.start()
 
     def __keep_config_synced(self):
         while True:
@@ -70,20 +90,23 @@ class __Config:
             self.__config = self.__load_config_file()
 
     def set(self, key, value):
+        self.first_run_init()
         self.__config[key] = value
         self.__update_required = True
 
     def get(self, key):
+        self.first_run_init()
         try:
             return self.__config[key]
         except KeyError:
             return None
 
     def unset(self, key):
+        self.first_run_init()
         try:
             del self.__config[key]
             self.__update_required = True
-        except:
+        except KeyError:
             pass
 
 

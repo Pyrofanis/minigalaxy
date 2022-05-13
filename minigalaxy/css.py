@@ -1,8 +1,5 @@
-import gi
-gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk
+from minigalaxy.ui.gtk import Gtk
 from minigalaxy.paths import CSS_PATH
-
 
 CSS_PROVIDER = Gtk.CssProvider()
 try:

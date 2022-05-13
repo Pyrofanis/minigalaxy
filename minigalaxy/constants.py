@@ -2,7 +2,6 @@ import requests
 import platform
 from minigalaxy.translation import _
 from minigalaxy.version import VERSION
-from minigalaxy.paths import DEFAULT_INSTALL_DIR
 
 SUPPORTED_DOWNLOAD_LANGUAGES = [
     ["br", _("Brazilian Portuguese")],
@@ -26,22 +25,40 @@ SUPPORTED_DOWNLOAD_LANGUAGES = [
     ["tr", _("Turkish")],
 ]
 
-# The default values for new configuration files
-DEFAULT_CONFIGURATION = {
-    "lang": "en",
-    "install_dir": DEFAULT_INSTALL_DIR,
-    "keep_installers": False,
-    "stay_logged_in": True,
-    "show_fps": False,
-    "show_windows_games": False,
-    "keep_window_maximized": False
-}
+SUPPORTED_LOCALES = [
+    ["", _("System default")],
+    ["pt_BR", _("Brazilian Portuguese")],
+    ["cs_CZ", _("Czech")],
+    ["nl", _("Dutch")],
+    ["en_US", _("English")],
+    ["fi", _("Finnish")],
+    ["fr", _("French")],
+    ["de", _("German")],
+    ["it_IT", _("Italian")],
+    ["nb_NO", _("Norwegian Bokmål")],
+    ["nn_NO", _("Norwegian Nynorsk")],
+    ["pl", _("Polish")],
+    ["ru_RU", _("Russian")],
+    ["zh_CN", _("Simplified Chinese")],
+    ["es", _("Spanish")],
+    ["es_ES", _("Spanish (Spain)")],
+    ["sv_SE", _("Swedish")],
+    ["zh_TW", _("Traditional Chinese")],
+    ["tr", _("Turkish")],
+    ["uk", _("Ukrainian")],
+]
+
+VIEWS = [
+    ["grid", _("Grid")],
+    ["list", _("List")],
+]
 
 # Game IDs to ignore when received by the API
 IGNORE_GAME_IDS = [
     1424856371,  # Hotline Miami 2: Wrong Number - Digital Comics
     1980301910,  # The Witcher Goodies Collection
     2005648906,  # Spring Sale Goodies Collection #1
+    1486144755,  # Cyberpunk 2077 Goodies Collection
 ]
 
 DOWNLOAD_CHUNK_SIZE = 1024 * 1024  # 1 MB

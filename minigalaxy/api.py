@@ -1,3 +1,4 @@
+import http
 import os
 import time
 from urllib.parse import urlencode
@@ -70,40 +71,41 @@ class Api:
 
     # Get all Linux games in the library of the user. Ignore other platforms and movies
     def get_library(self):
-        if not self.active_token:
-            return
-
+        err_msg = ""
         games = []
-        current_page = 1
-        all_pages_processed = False
-        url = "https://embed.gog.com/account/getFilteredProducts"
+        if self.active_token:
+            current_page = 1
+            all_pages_processed = False
+            url = "https://embed.gog.com/account/getFilteredProducts"
 
-        while not all_pages_processed:
-            params = {
-                'mediaType': 1,  # 1 means game
-                'page': current_page,
-            }
-            response = self.__request(url, params=params)
-            total_pages = response["totalPages"]
+            while not all_pages_processed:
+                params = {
+                    'mediaType': 1,  # 1 means game
+                    'page': current_page,
+                }
+                response = self.__request(url, params=params)
+                total_pages = response["totalPages"]
 
-            for product in response["products"]:
-                if product["id"] not in IGNORE_GAME_IDS:
-                    # Only support Linux unless the show_windows_games setting is enabled
-                    if product["worksOn"]["Linux"]:
-                        platform = "linux"
-                    elif Config.get("show_windows_games"):
-                        platform = "windows"
-                    else:
-                        continue
-                    if not product["url"]:
-                        print("{} ({}) has no store page url".format(product["title"], product['id']))
-                    game = Game(name=product["title"], url=product["url"], game_id=product["id"],
-                                image_url=product["image"], platform=platform)
-                    games.append(game)
-            if current_page == total_pages:
-                all_pages_processed = True
-            current_page += 1
-        return games
+                for product in response["products"]:
+                    if product["id"] not in IGNORE_GAME_IDS:
+                        # Only support Linux unless the show_windows_games setting is enabled
+                        if product["worksOn"]["Linux"]:
+                            platform = "linux"
+                        elif Config.get("show_windows_games"):
+                            platform = "windows"
+                        else:
+                            continue
+                        if not product["url"]:
+                            print("{} ({}) has no store page url".format(product["title"], product['id']))
+                        game = Game(name=product["title"], url=product["url"], game_id=product["id"],
+                                    image_url=product["image"], platform=platform)
+                        games.append(game)
+                if current_page == total_pages:
+                    all_pages_processed = True
+                current_page += 1
+        else:
+            err_msg = "Couldn't connect to GOG servers"
+        return games, err_msg
 
     def get_owned_products_ids(self):
         if not self.active_token:
@@ -133,7 +135,7 @@ class Api:
         return response
 
     # This returns a unique download url and a link to the checksum of the download
-    def get_download_info(self, game: Game, operating_system="linux", dlc_installers="") -> tuple:
+    def get_download_info(self, game: Game, operating_system="linux", dlc_installers="") -> dict:
         if dlc_installers:
             installers = dlc_installers
         else:
@@ -165,10 +167,55 @@ class Api:
         return self.__request(url)['downlink']
 
     def get_download_file_md5(self, url):
-        xml_link = self.__request(url)['checksum']
-        xml_string = SESSION.get(xml_link).text
-        root = ET.fromstring(xml_string)
-        return root.attrib['md5']
+        """
+        Returns a download file's md5 sum
+        Returns an empty string if anything goes wrong
+        :param url: Url to get download and checksum links from the API
+        :return: the md5 sum as string
+        """
+        result = ""
+        checksum_data = self.__request(url)
+        if 'checksum' in checksum_data.keys() and len(checksum_data['checksum']) > 0:
+            xml_data = self.__get_xml_checksum(checksum_data['checksum'])
+            if "md5" in xml_data.keys() and len(xml_data["md5"]) > 0:
+                result = xml_data["md5"]
+
+        if not result:
+            print("Couldn't find md5 in xml checksum data")
+
+        return result
+
+    def get_file_size(self, url):
+        """
+        Returns the file size according to an XML file offered by GOG
+        Returns 0 if anything goes wrong
+        :param url: Url to get download and checksum links from the API
+        :return: probable file size in bytes as int
+        """
+        result = 0
+        checksum_data = self.__request(url)
+        if 'checksum' in checksum_data.keys() and len(checksum_data['checksum']) > 0:
+            xml_data = self.__get_xml_checksum(checksum_data['checksum'])
+            if "total_size" in xml_data.keys() and int(xml_data["total_size"]) > 0:
+                result = int(xml_data["total_size"])
+
+        if not result:
+            print("Couldn't find file size in xml checksum data")
+
+        return result
+
+    def __get_xml_checksum(self, url):
+        result = {}
+        response = SESSION.get(url)
+        if response.status_code == http.HTTPStatus.OK and len(response.text) > 0:
+            response_object = ET.fromstring(response.text)
+            if response_object and response_object.attrib:
+                result = response_object.attrib
+        else:
+            print("Couldn't read xml data. Response with code {} received with the following content: {}".format(
+                response.status_code, response.text
+            ))
+        return result
 
     def get_user_info(self) -> str:
         username = Config.get("username")
@@ -197,12 +244,17 @@ class Api:
                 break
         return version
 
-    def can_connect(self) -> bool:
-        url = "https://embed.gog.com"
-        try:
-            SESSION.get(url, timeout=5)
-        except requests.exceptions.ConnectionError:
-            return False
+    @staticmethod
+    def can_connect() -> bool:
+        urls = [
+            "https://embed.gog.com",
+            "https://auth.gog.com",
+        ]
+        for url in urls:
+            try:
+                SESSION.get(url, timeout=5)
+            except requests.exceptions.ConnectionError:
+                return False
         return True
 
     # Make a request with the active token
@@ -224,3 +276,33 @@ class Api:
             print("Response body: {}".format(response.text))
             print("")
         return response.json()
+
+    @staticmethod
+    def __request_gamesdb(game: Game):
+        request_url = "https://gamesdb.gog.com/platforms/gog/external_releases/{}".format(game.id)
+        try:
+            response = SESSION.get(request_url)
+            respones_dict = response.json()
+        except (requests.exceptions.ConnectionError, ValueError):
+            respones_dict = {}
+        return respones_dict
+
+    def get_gamesdb_info(self, game: Game) -> dict:
+        gamesdb_dict = {"cover": "", "vertical_cover": "", "background": ""}
+        response_json = self.__request_gamesdb(game)
+        if "game" in response_json:
+            for gamesdb_key in gamesdb_dict:
+                if gamesdb_key in response_json['game']:
+                    gamesdb_dict[gamesdb_key] = response_json["game"][gamesdb_key]["url_format"].replace(
+                        '{formatter}.{ext}', '.png')
+            gamesdb_dict["summary"] = {}
+            for summary_key in response_json["game"]["summary"]:
+                gamesdb_dict["summary"][summary_key] = response_json["game"]["summary"][summary_key]
+            gamesdb_dict["genre"] = {}
+            if len(response_json["game"]["genres"]) > 0:
+                for genre_key in response_json["game"]["genres"][0]["name"]:
+                    gamesdb_dict["genre"][genre_key] = response_json["game"]["genres"][0]["name"][genre_key]
+        else:
+            gamesdb_dict["summary"] = {}
+            gamesdb_dict["genre"] = {}
+        return gamesdb_dict
